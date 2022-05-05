@@ -13,6 +13,5 @@ app.use('/users', usersRoutes);
 app.listen(PORT, () => console.log(`Server running on port: http://localhost:${PORT}`));
 
 app.get('/', (req, res) => {
-  console.log("i'm here");
   res.send('Hello from homepage');
 });
