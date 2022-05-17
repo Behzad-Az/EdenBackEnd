@@ -34,8 +34,8 @@ export const createInvestment = async (req, res) => {
 
 export const deleteInvestment = async (req, res) => {
   try {
-    const { id } = req.params;
     await db.raw('PRAGMA foreign_keys = ON;');
+    const { id } = req.params;
     const deletedItemCount = await db('investments').where({ id }).del();
     res.status(200).json({ deletedItemCount });
   } 
