@@ -8,7 +8,7 @@ export default {
     client: 'sqlite3',
     connection: {
       filename: './db/dev.db3'
-    }
-  },
-  useNullAsDefault: true
+    },
+    useNullAsDefault: true
+  }
 };

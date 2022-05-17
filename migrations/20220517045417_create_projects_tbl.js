@@ -4,9 +4,8 @@
  */
 export const up = function(knex) {
   return knex.schema.createTable('projects', tbl => {
-    tbl.bigIncrements('id');
-    tbl.bigInteger('property_id')
-      .unsigned()
+    tbl.string('id', 100).notNullable().unique();
+    tbl.string('property_id', 100)
       .references('id')
       .inTable('properties')
       .onDelete('CASCADE')
