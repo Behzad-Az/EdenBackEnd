@@ -1,39 +1,31 @@
 import { v4 as uuidv4 } from 'uuid';
-const projects = [];
+import knex from 'knex';
+import config from '../knexfile.js';
+const db = knex(config.development);
 
-export const getProjects = (req, res) => {
-  res.send(projects);
+export const getProjects = async (req, res) => {
+  try {
+    const projects = await db('projects')
+      .where({ status: 'active' })
+      .whereNull('deleted_at');
+    res.status(200).json(projects);
+  }
+  catch (error) {
+    res.status(404).json({ error: error.message });
+  }
 };
 
-export const getProject = (req, res) => {
-  const foundProject = projects.find(project => project.id === req.params.id);
-  res.send(foundProject);
-};
-
-export const createProject = (req, res) => {
-  const project = {
+export const createProject = async (req, res) => {
+  const newProject = {
     id: uuidv4(),
     ...req.body
   };
-  projects.push(project);
-  res.send(`Inserted project with ID ${project.id}`);
-};
-
-export const patchProject = (req, res) => {
-  const projectIndex = projects.findIndex(project => project.id === req.params.id);
-  if (projectIndex > -1) {
-    projects[projectIndex] = {
-      ...projects[projectIndex],
-      ...req.body
-    };
+  try {
+    await db.raw("PRAGMA foreign_keys = ON;");
+    await db('projects').insert(newProject);
+    res.status(200).json(newProject);
   }
-  res.send(`Project with the id ${req.params.id} updated in database`);
-};
-
-export const deleteProject = (req, res) => {
-  const projectIndex = projects.findIndex(project => project.id === req.params.id);
-  if (projectIndex > -1) {
-    projects.splice(projectIndex, 1);
+  catch (error) {
+    res.status(409).json({ error: error.message });
   }
-  res.send(`Project with the id ${req.params.id} removed from database`);
 };

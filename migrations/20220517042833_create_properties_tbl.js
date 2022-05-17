@@ -7,6 +7,7 @@ export const up = function(knex) {
     tbl.string('id', 100).notNullable().unique();
     tbl.text('address', 240).notNullable();
     tbl.integer('asking_price').unsigned().notNullable();
+    tbl.string('status', 100).notNullable().defaultTo('active');
     tbl.text('agent_description').notNullable().defaultTo('No agent notes could be found');
     tbl.timestamps(true, true);
     tbl.timestamp('deleted_at');

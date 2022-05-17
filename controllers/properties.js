@@ -6,7 +6,7 @@ const db = knex(config.development);
 export const getProperties = async (req, res) => {
   try {
     const properties = await db('properties')
-      .select('id', 'address')
+      .where({ status: 'active' })
       .whereNull('deleted_at');
     res.status(200).json(properties);
   }
