@@ -10,7 +10,7 @@ export const up = function(knex) {
     tbl.string('email', 100).notNullable().unique();
     tbl.string('password', 100).notNullable();
     tbl.integer('default_invest_limit').notNullable().defaultTo(1000);
-    tbl.dateTime('last_login');
+    tbl.dateTime('last_login').defaultTo(knex.fn.now());
     tbl.timestamps(true, true);
     tbl.timestamp('deleted_at');
   });
