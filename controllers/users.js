@@ -1,39 +1,32 @@
 import { v4 as uuidv4 } from 'uuid';
-const users = [];
+import knex from 'knex';
+import bcrypt from 'bcrypt';
 
-export const getUsers = (req, res) => {
-  res.send(users);
+import config from '../knexfile.js';
+const db = knex(config.development);
+
+export const getUsers = async (req, res) => {
+  try {
+    const users = await db('users').whereNull('deleted_at');
+    res.status(200).json(users);
+  } 
+  catch (error) {
+    res.status(404).json({ error: error.message });
+  }
 };
 
-export const getUser = (req, res) => {
-  const foundUser = users.find(user => user.id === req.params.id);
-  res.send(foundUser);
-};
-
-export const createUser = (req, res) => {
-  const user = {
-    id: uuidv4(),
-    ...req.body
-  };
-  users.push(user);
-  res.send(`Inserted user with ID ${user.id}`);
-};
-
-export const patchUser = (req, res) => {
-  const userIndex = users.findIndex(user => user.id === req.params.id);
-  if (userIndex > -1) {
-    users[userIndex] = {
-      ...users[userIndex],
-      ...req.body
+export const createUser = async (req, res) => {
+  try {
+    const password = await bcrypt.hash(req.body.password, 5);
+    const newUser = {
+      id: uuidv4(),
+      ...req.body,
+      password
     };
+    await db('users').insert(newUser);
+    res.status(200).json(newUser);
+  } 
+  catch (error) {
+    res.status(409).json({ error: error.message });
   }
-  res.send(`User with the id ${req.params.id} updated in database`);
-};
-
-export const deleteUser = (req, res) => {
-  const userIndex = users.findIndex(user => user.id === req.params.id);
-  if (userIndex > -1) {
-    users.splice(userIndex, 1);
-  }
-  res.send(`User with the id ${req.params.id} removed from database`);
 };

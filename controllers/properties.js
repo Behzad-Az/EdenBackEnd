@@ -25,6 +25,6 @@ export const createProperty = async (req, res) => {
     res.status(200).json(newProperty);
   } 
   catch (error) {
-    res.status(409).json({ error: 'Error in inserting new property' });
+    res.status(409).json({ error: error.message });
   }
 };
