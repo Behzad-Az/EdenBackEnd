@@ -28,3 +28,15 @@ export const createProperty = async (req, res) => {
     res.status(409).json({ error: error.message });
   }
 };
+
+export const deleteProperty = async (req, res) => {
+  try {
+    const { id } = req.params;
+    await db.raw('PRAGMA foreign_keys = ON;');
+    const deletedItemCount = await db('properties').where({ id }).del();
+    res.status(200).json({ deletedItemCount });
+  } 
+  catch (error) {
+    res.status(409).json({ error: error.message });
+  }
+};

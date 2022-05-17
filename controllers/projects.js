@@ -16,12 +16,12 @@ export const getProjects = async (req, res) => {
 };
 
 export const createProject = async (req, res) => {
-  const newProject = {
-    id: uuidv4(),
-    ...req.body
-  };
   try {
-    await db.raw("PRAGMA foreign_keys = ON;");
+    await db.raw('PRAGMA foreign_keys = ON;');
+    const newProject = {
+      id: uuidv4(),
+      ...req.body
+    };
     await db('projects').insert(newProject);
     res.status(200).json(newProject);
   }

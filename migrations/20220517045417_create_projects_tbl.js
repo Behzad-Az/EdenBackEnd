@@ -4,7 +4,6 @@
  */
 export const up = function(knex) {
   return knex.schema.createTable('projects', tbl => {
-    
     tbl.string('id', 100).notNullable().unique();
     tbl.string('property_id', 100).notNullable();
     tbl.foreign('property_id')
