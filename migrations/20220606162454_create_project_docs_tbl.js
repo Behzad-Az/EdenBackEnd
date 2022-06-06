@@ -3,7 +3,7 @@
  * @returns { Promise<void> }
  */
  export const up = function(knex) {
-  return knex.schema.createTable('investments', tbl => {
+  return knex.schema.createTable('project_docs', tbl => {
     tbl.string('id', 100).notNullable().unique();
     tbl.string('project_id', 100).notNullable();
     tbl.foreign('project_id')
@@ -11,15 +11,8 @@
       .inTable('projects')
       .onDelete('CASCADE')
       .onUpdate('CASCADE');
-    tbl.string('user_id', 100).notNullable();
-    tbl.foreign('user_id')
-      .references('id')
-      .inTable('users')
-      .onDelete('CASCADE')
-      .onUpdate('CASCADE');
-    tbl.integer('amount').notNullable().defaultTo(0);
-    tbl.string('currency', 10).notNullable().defaultTo('CDN');
-    tbl.string('status', 100).notNullable().defaultTo('initiated');
+    tbl.string('title', 100).notNullable().defaultTo('not_found_404');
+    tbl.string('download_link', 200).notNullable().defaultTo('not_found_404');
     tbl.timestamps(true, true);
     tbl.timestamp('deleted_at');
   });
@@ -30,5 +23,5 @@
  * @returns { Promise<void> }
  */
 export const down = function(knex) {
-  return knex.schema.dropTableIfExists('investments');
+  return knex.schema.dropTableIfExists('project_docs');
 };

@@ -3,12 +3,13 @@
  * @returns { Promise<void> }
  */
  export const up = function(knex) {
-  return knex.schema.createTable('investments', tbl => {
+  return knex.schema.createTable('transactions', tbl => {
     tbl.string('id', 100).notNullable().unique();
-    tbl.string('project_id', 100).notNullable();
-    tbl.foreign('project_id')
+    tbl.string('type', 50).notNullable(); //deposit | withdraw | fee | invest | distribution
+    tbl.string('invest_id', 100);
+    tbl.foreign('invest_id')
       .references('id')
-      .inTable('projects')
+      .inTable('investments')
       .onDelete('CASCADE')
       .onUpdate('CASCADE');
     tbl.string('user_id', 100).notNullable();
@@ -17,9 +18,9 @@
       .inTable('users')
       .onDelete('CASCADE')
       .onUpdate('CASCADE');
-    tbl.integer('amount').notNullable().defaultTo(0);
+    tbl.float('amount').notNullable().defaultTo(0);
     tbl.string('currency', 10).notNullable().defaultTo('CDN');
-    tbl.string('status', 100).notNullable().defaultTo('initiated');
+    tbl.string('comments', 200);
     tbl.timestamps(true, true);
     tbl.timestamp('deleted_at');
   });
@@ -30,5 +31,5 @@
  * @returns { Promise<void> }
  */
 export const down = function(knex) {
-  return knex.schema.dropTableIfExists('investments');
+  return knex.schema.dropTableIfExists('transactions');
 };
